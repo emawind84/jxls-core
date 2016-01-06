@@ -1,15 +1,18 @@
 package net.sf.jxls;
 
-import net.sf.jxls.exception.ParsePropertyException;
-import net.sf.jxls.transformer.XLSTransformer;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import net.sf.jxls.exception.ParsePropertyException;
+import net.sf.jxls.transformer.XLSTransformer;
 
 /**
 * @author Leonid Vysochyn
@@ -73,5 +76,56 @@ public class XlsxTest extends BaseTest {
         checker.checkFormulaCell( sourceSheet, 7, resultSheet, 23, (short)1, "SUM(B21:B23)");
         saveWorkbook(resultWorkbook, simpleDestXLSX);
     }
+    
+    public void testInterruptWriteXlsx() throws ParsePropertyException, InvalidFormatException, IOException{
+    	Map beans = new HashMap();
+        beans.put( "departments", departments );
+        
+    	InputStream is = new BufferedInputStream(getClass().getResourceAsStream(simpleXlsx));
+        XLSTransformer transformer = new XLSTransformer();
+		
+		final SimpleTaskLinkImpl link = new SimpleTaskLinkImpl() {
+			@Override
+			public void poll() throws InterruptedException {
+				// slow down the process (simulate long process running)
+				Thread.sleep(500);
+				super.poll();
+			}
+		};
+		
+		InterruptJob job = new InterruptJob() {
+			@Override
+			public void run() {
+				try {
+					// wait for 2000ms before cancel the process
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				// cancel the process
+				link.setCancelled(true);
+			}
+		};
+		
+		new Thread(job).start();
+		
+		try {
+			Workbook resultWorkbook = transformer.transformXLS(is, beans, link);
+			saveWorkbook(resultWorkbook, simpleDestXLSX);
+			assertTrue(false);
+		} catch ( InterruptedException e ) {
+			// process canceled
+			//e.printStackTrace();
+			assertTrue( link.isCancelled() );
+		}
+    }
+    
+    public static class InterruptJob implements Runnable {
+
+		@Override
+		public void run() {
+		}
+		
+	}
 
 }
