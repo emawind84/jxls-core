@@ -64,7 +64,7 @@ public class SQLTag extends BaseTag {
         this.var = var;
     }
 
-    public ResultTransformation process(SheetTransformer sheetTransformer) {
+    public ResultTransformation process(SheetTransformer sheetTransformer) throws InterruptedException {
         ResultTransformation shift = new ResultTransformation(0);
         if (query != null) {
             if (tagContext.getBeans().containsKey(REPORT_MANAGER_KEY)) {

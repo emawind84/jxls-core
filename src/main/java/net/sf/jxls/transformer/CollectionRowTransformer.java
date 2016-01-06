@@ -59,7 +59,7 @@ public class CollectionRowTransformer extends BaseRowTransformer {
         rowCollections.add( rowCollection );
     }
 
-    public ResultTransformation transform(SheetTransformationController stc, SheetTransformer sheetTransformer, Map beans, ResultTransformation previousTransformation) {
+    public ResultTransformation transform(SheetTransformationController stc, SheetTransformer sheetTransformer, Map beans, ResultTransformation previousTransformation) throws InterruptedException {
         try {
             SimpleRowTransformer simpleRowTransformer = new SimpleRowTransformer(row, cellProcessors, configuration);
             simpleRowTransformer.transform(stc, sheetTransformer, beans, null);
@@ -79,8 +79,9 @@ public class CollectionRowTransformer extends BaseRowTransformer {
      * @param beans Beans to apply
      * @return number to SHIFT all other rows in template
      * @throws net.sf.jxls.exception.ParsePropertyException
+     * @throws InterruptedException 
      */
-    ResultTransformation processRowCollections(SheetTransformationController sheetTransformationController, SheetTransformer sheetTransformer, Map beans) throws ParsePropertyException {
+    ResultTransformation processRowCollections(SheetTransformationController sheetTransformationController, SheetTransformer sheetTransformer, Map beans) throws ParsePropertyException, InterruptedException {
         int maxShiftNumber = 0;
 
         int rowNum = row.getPoiRow().getRowNum();

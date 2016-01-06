@@ -41,7 +41,7 @@ public class SimpleRowTransformer extends BaseRowTransformer {
     }
 
 
-    public ResultTransformation transform(SheetTransformationController stc, SheetTransformer sheetTransformer, Map beans, ResultTransformation previousTransformation){
+    public ResultTransformation transform(SheetTransformationController stc, SheetTransformer sheetTransformer, Map beans, ResultTransformation previousTransformation) throws InterruptedException{
         CellTransformer cellTransformer = new CellTransformer( configuration );
         if( cells.isEmpty() ){
 //            throw new RuntimeException("Don't expect to execute this code");
@@ -55,6 +55,7 @@ public class SimpleRowTransformer extends BaseRowTransformer {
             }
         }else{
             for (int i = 0, c = cells.size(); i < c; i++) {
+            	if(sheetTransformer.getLink()!=null) sheetTransformer.getLink().poll();
                 Cell cell = (Cell) cells.get(i);
                 if (configuration.getCellKeyName() != null) {
                     beans.put(configuration.getCellKeyName(), cell.getPoiCell() );

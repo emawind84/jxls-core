@@ -30,7 +30,7 @@ public class OutlineTag extends BaseTag{
         this.detail = detail;
     }
 
-    public ResultTransformation process(SheetTransformer sheetTransformer) {
+    public ResultTransformation process(SheetTransformer sheetTransformer) throws InterruptedException {
         if( log.isDebugEnabled() ){
             log.info("jx:outline tag processing..");
         }

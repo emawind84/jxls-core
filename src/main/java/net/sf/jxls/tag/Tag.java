@@ -11,8 +11,9 @@ public interface Tag {
     /**
      * @return number of rows to shift
      * @param sheetTransformer
+     * @throws InterruptedException 
      */
-    public ResultTransformation process(SheetTransformer sheetTransformer);
+    public ResultTransformation process(SheetTransformer sheetTransformer) throws InterruptedException;
 
     /**
      * @return tag name

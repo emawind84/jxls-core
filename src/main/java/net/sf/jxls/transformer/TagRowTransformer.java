@@ -27,7 +27,7 @@ public class TagRowTransformer extends BaseRowTransformer {
         return resultTransformation;
     }
 
-    public ResultTransformation transform(SheetTransformationController stc, SheetTransformer sheetTransformer, Map beans, ResultTransformation previousTransformation) {
+    public ResultTransformation transform(SheetTransformationController stc, SheetTransformer sheetTransformer, Map beans, ResultTransformation previousTransformation) throws InterruptedException {
         tag.getTagContext().setSheetTransformationController( stc );
         resultTransformation = tag.process( sheetTransformer );
         return resultTransformation;

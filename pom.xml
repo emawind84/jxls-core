@@ -1,12 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <parent>
-        <groupId>net.sf.jxls</groupId>
-        <artifactId>jxls</artifactId>
-        <version>1.0.6</version>
-    </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.sf.jxls</groupId>
     <artifactId>jxls-core</artifactId>
+    <version>1.0.6_C1</version>
     <packaging>jar</packaging>
     <name>jxls-core</name>
     <url>http://jxls.sf.net</url>
@@ -67,6 +63,11 @@
             <version>1.8.0.10</version>
             <scope>test</scope>
         </dependency>
+        <!-- <dependency>
+        	<groupId>sangah.pmis</groupId>
+        	<artifactId>sangah.pmis</artifactId>
+        	<version>0.0.1-SNAPSHOT</version>
+        </dependency> -->
     </dependencies>
     <build>
         <plugins>
@@ -97,8 +98,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.7</source>
+					<target>1.7</target>
+					<encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
 

@@ -52,7 +52,7 @@ public class IfTag extends BaseTag {
     }
 
 
-    public ResultTransformation process(SheetTransformer sheetTransformer) {
+    public ResultTransformation process(SheetTransformer sheetTransformer) throws InterruptedException {
         if( log.isDebugEnabled() ){
             log.debug("if tag processing. Parameters: test=" + test);
         }
@@ -85,7 +85,7 @@ public class IfTag extends BaseTag {
         return shift.add( new ResultTransformation(0, shiftNumber) );
     }
 
-    private ResultTransformation processOneRowTag(SheetTransformer sheetTransformer) {
+    private ResultTransformation processOneRowTag(SheetTransformer sheetTransformer) throws InterruptedException {
         Block body = tagContext.getTagBody();
         int shiftNumber = 0;
         SheetTransformationController stc = new SheetTransformationControllerImpl( tagContext.getSheet() );

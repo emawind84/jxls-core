@@ -1,5 +1,15 @@
 package net.sf.jxls.transformer;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.sf.jxls.controller.SheetTransformationController;
 import net.sf.jxls.controller.SheetTransformationControllerImpl;
 import net.sf.jxls.controller.WorkbookTransformationController;
@@ -10,16 +20,17 @@ import net.sf.jxls.parser.CellParser;
 import net.sf.jxls.processor.RowProcessor;
 import net.sf.jxls.tag.Block;
 import net.sf.jxls.transformation.ResultTransformation;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.util.*;
 
 /**
  * @author Leonid Vysochyn
  */
 public class SheetTransformer {
     protected static final Log log = LogFactory.getLog(SheetTransformer.class);
+    
+    private TaskLink link;
+    public TaskLink getLink(){
+    	return link;
+    }
 
     /**
      * {@link java.util.Set} of all collections to outline
@@ -47,6 +58,15 @@ public class SheetTransformer {
      * {@link net.sf.jxls.processor.CellProcessor} cell processors
      */
     private List cellProcessors = new ArrayList();
+    
+    public SheetTransformer(Set fixedSizeCollections, Set groupedCollections, List rowProcessors, List cellProcessors, Configuration configuration, TaskLink link) {
+        this.fixedSizeCollections = fixedSizeCollections;
+        this.groupedCollections = groupedCollections;
+        this.rowProcessors = rowProcessors;
+        this.cellProcessors = cellProcessors;
+        this.configuration = configuration;
+        this.link = link;
+    }
 
     public SheetTransformer(Set fixedSizeCollections, Set groupedCollections, List rowProcessors, List cellProcessors, Configuration configuration) {
         this.fixedSizeCollections = fixedSizeCollections;
@@ -68,13 +88,16 @@ public class SheetTransformer {
         this.groupedCollections = groupedCollections;
     }
 
-    void transformSheet(WorkbookTransformationController workbookTransformationController, Sheet sheet, Map beans) throws ParsePropertyException {
+    void transformSheet(WorkbookTransformationController workbookTransformationController, Sheet sheet, Map beans) throws ParsePropertyException, InterruptedException {
         log.debug("Processing sheet: " + sheet.getSheetName());
         exposePOIBeans(sheet, beans);
         if (!beans.isEmpty()) {
             SheetTransformationController stc = new SheetTransformationControllerImpl(sheet);
             workbookTransformationController.addSheetTransformationController(stc);
             for (int i = sheet.getPoiSheet().getFirstRowNum(); i <= sheet.getPoiSheet().getLastRowNum(); i++) {
+            	if(link != null) {
+            		link.poll();
+            	}
                 org.apache.poi.ss.usermodel.Row hssfRow = sheet.getPoiSheet().getRow(i);
                 if (hssfRow != null) {
                     List rowTransformers = parseRow(sheet, hssfRow, beans);
@@ -134,8 +157,9 @@ public class SheetTransformer {
      * @param parentRow - {@link Row} object representing original template row linked to rows to process
      * @return A number of rows to be shifted
      * @throws ParsePropertyException
+     * @throws InterruptedException 
      */
-    public ResultTransformation processRows(SheetTransformationController stc, Sheet sheet, int startRow, int endRow, Map beans, Row parentRow) throws ParsePropertyException {
+    public ResultTransformation processRows(SheetTransformationController stc, Sheet sheet, int startRow, int endRow, Map beans, Row parentRow) throws ParsePropertyException, InterruptedException {
         int origEndRow = endRow;
         int nextRowShiftNumber = 0;
         boolean hasTagProcessing = false;
@@ -168,11 +192,11 @@ public class SheetTransformer {
         return r;
     }
 
-    ResultTransformation processRow(SheetTransformationController stc, Sheet sheet, org.apache.poi.ss.usermodel.Row hssfRow, Map beans, Row parentRow) {
+    ResultTransformation processRow(SheetTransformationController stc, Sheet sheet, org.apache.poi.ss.usermodel.Row hssfRow, Map beans, Row parentRow) throws InterruptedException {
         return processRow(stc, sheet, hssfRow, hssfRow.getFirstCellNum(), hssfRow.getLastCellNum(), beans, parentRow);
     }
 
-    public ResultTransformation processRow(SheetTransformationController stc, Sheet sheet, org.apache.poi.ss.usermodel.Row hssfRow, int startCell, int endCell, Map beans, Row parentRow) {
+    public ResultTransformation processRow(SheetTransformationController stc, Sheet sheet, org.apache.poi.ss.usermodel.Row hssfRow, int startCell, int endCell, Map beans, Row parentRow) throws InterruptedException {
         List transformers = parseCells(sheet, hssfRow, startCell, endCell, beans);
 
 

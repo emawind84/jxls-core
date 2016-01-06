@@ -172,7 +172,7 @@ public class ForEachTag extends BaseTag {
     			|| obj instanceof double[];
     }
 
-    public ResultTransformation process(SheetTransformer sheetTransformer) {
+    public ResultTransformation process(SheetTransformer sheetTransformer) throws InterruptedException {
         if (log.isDebugEnabled()) {
             log.debug("forEach tag processing. Attributes: var = " + var + ", items=" + items);
             log.debug("Current tagContext: " + tagContext);
@@ -230,7 +230,7 @@ public class ForEachTag extends BaseTag {
         return shift;
     }
 
-    private ResultTransformation processOneRowTag(SheetTransformer sheetTransformer) {
+    private ResultTransformation processOneRowTag(SheetTransformer sheetTransformer) throws InterruptedException {
         Block body = tagContext.getTagBody();
         int shiftNumber = 0;
         Map beans = tagContext.getBeans();
@@ -282,7 +282,7 @@ public class ForEachTag extends BaseTag {
         return shift;
     }
 
-    private ResultTransformation processGroupedData(Collection groupedData, Map beans, Block body, SheetTransformer sheetTransformer) {
+    private ResultTransformation processGroupedData(Collection groupedData, Map beans, Block body, SheetTransformer sheetTransformer) throws InterruptedException {
         ResultTransformation shift;
         int startRowNum;
         int endRowNum;
@@ -304,7 +304,7 @@ public class ForEachTag extends BaseTag {
         return shift;
     }
 
-    private void processGroupedDataOneRow(Collection groupedData, Map beans, Block body, ResultTransformation shift, SheetTransformer sheetTransformer) {
+    private void processGroupedDataOneRow(Collection groupedData, Map beans, Block body, ResultTransformation shift, SheetTransformer sheetTransformer) throws InterruptedException {
         ResultTransformation processResult;
         short startColNum, endColNum;
         int k = 0;
@@ -325,7 +325,7 @@ public class ForEachTag extends BaseTag {
 
 
 
-    private ResultTransformation processCollectionItems(Collection c2, Map beans, Block body, SheetTransformer sheetTransformer) {
+    private ResultTransformation processCollectionItems(Collection c2, Map beans, Block body, SheetTransformer sheetTransformer) throws InterruptedException {
         ResultTransformation shift = new ResultTransformation(0);
         int startRowNum;
         int endRowNum;

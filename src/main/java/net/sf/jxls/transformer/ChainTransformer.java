@@ -47,7 +47,7 @@ public class ChainTransformer{
 
 
 
-    ResultTransformation transform(SheetTransformationController stc, SheetTransformer sheetTransformer, Map beans){
+    ResultTransformation transform(SheetTransformationController stc, SheetTransformer sheetTransformer, Map beans) throws InterruptedException{
         ResultTransformation resultTransformation = new ResultTransformation();
         for (int i = 0, c=transformers.size(); i < c; i++) {
             RowTransformer rowTransformer = (RowTransformer) transformers.get(i);

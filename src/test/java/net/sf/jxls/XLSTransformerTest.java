@@ -1361,7 +1361,7 @@ public class XLSTransformerTest extends TestCase {
     }
 
     // todo complete this test
-    public void atestMultipleSheetList2() throws IOException, ParsePropertyException, InvalidFormatException {
+    public void atestMultipleSheetList2() throws IOException, ParsePropertyException, InvalidFormatException, InterruptedException {
         InputStream is = new BufferedInputStream(getClass().getResourceAsStream(multipleSheetList2XLS));
         XLSTransformer transformer = new XLSTransformer();
         List sheetNames = new ArrayList();
